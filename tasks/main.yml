@@ -1,0 +1,14 @@
+# Addin play
+# Install memcached
+---
+- name: "Install package."
+  package:
+    name: memcached
+    state: present
+  register: task_result
+  until: task_result is success
+  retries: 5
+  delay: 2
+- name: "Link user binary."
+  command: "{{ apnscp_root }}/bin/scripts/yum-post.php install --update memcached siteinfo"
+  notify: "Flush fsmount on install."
