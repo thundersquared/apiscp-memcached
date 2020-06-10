@@ -1,13 +1,18 @@
 # Addin play
 # Install memcached
 ---
-- name: "Remove memcached from ssh."
+- name: "Update repos cache and install Yarn package."
+  yum:
+    name: memcached
+    state: present
+    update_cache: yes
+- name: "Remove memcached from siteinfo."
   include_role:
     name: apnscp/initialize-filesystem-template
     tasks_from: "remove-package.yml"
   vars:
     package: memcached
-- name: "Install memcached package."
+- name: "Install memcached package to siteinfo."
   include_role:
     name: apnscp/initialize-filesystem-template
     tasks_from: "install-package.yml"
