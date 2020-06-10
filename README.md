@@ -27,7 +27,13 @@ ansible-playbook bootstrap.yml --tags=php/install-pecl-module --extra-vars=php_v
 
 ## Usage
 
-Todo.
+Usage may vary based on the software you're running on your websites.
+
+Recommended usage for WordPress is via [W3 Total Cache](https://wordpress.org/plugins/w3-total-cache/), starting a process on boot for each account on personal [user_daemons](https://docs.apiscp.com/INSTALL/#recommended-configuration-settings) port via Task Scheduler.
+
+```
+memcached -p 40010 -m 128
+```
 
 ## Contributing
 
