@@ -1,5 +1,0 @@
----
-- name: "Flush fsmount on install."
-  systemd:
-    name: fsmount
-    state: reloaded

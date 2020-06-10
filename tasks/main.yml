@@ -1,31 +1,37 @@
 # Addin play
 # Install memcached
 ---
-- name: "Install package."
-  package:
-    name: memcached
-    state: present
-  register: task_result
-  until: task_result is success
-  retries: 5
-  delay: 2
-- name: "Link user binary."
-  command: "{{ apnscp_root }}/bin/scripts/yum-post.php install --update memcached siteinfo"
-  notify: "Flush fsmount on install."
+- name: "Remove memcached from ssh."
+  include_role:
+    name: apnscp/initialize-filesystem-template
+    tasks_from: "remove-package.yml"
+  vars:
+    package: memcached
+- name: "Install memcached package."
+  include_role:
+    name: apnscp/initialize-filesystem-template
+    tasks_from: "install-package.yml"
+  vars:
+    package: memcached
+    service: siteinfo
 - name: "Get existing pecl_extensions."
   shell: |
     cpcmd -o json scope:get cp.bootstrapper pecl_extensions
   register: r
 - name: "Parse existing and set required pecl_extensions."
   set_fact:
-    pecl_extensions: "{{ r.stdout|from_json }}"
-    required_pecl:
-      - memcached
+    pecl_extensions: "{{ r.stdout | from_json }}"
+    pecl_extensions_updated: []
+- set_fact:
+    pecl_extensions: []
+  when: (pecl_extensions | type_debug not in ['list', 'string']) or pecl_extensions == ''
 - name: "Add required pecl_extensions."
   set_fact:
-    pecl_extensions: "{{ (pecl_extensions | type_debug == 'list') | ternary(pecl_extensions, [pecl_extensions]) + [ item.name ] }}"
-  when: item in pecl_extensions
-  with_items: required_pecl
+    pecl_extensions: |
+      {{
+        (pecl_extensions | type_debug == 'list') | ternary(pecl_extensions, [pecl_extensions]) + [ 'memcached' ]
+      }}
+  when: "'memcached' not in pecl_extensions"
 - name: "Set pecl_extensions via cpcmd."
   shell: |
     cpcmd scope:set cp.bootstrapper pecl_extensions '{{pecl_extensions|to_json}}'
