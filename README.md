@@ -15,7 +15,7 @@ ansible-playbook addin.yml --extra-vars=addin=apiscp-memcached
 To start using `memcached` via PHP, you'll have to rebuild your PECL modules.
 
 ```
-upcp -sb php/install-pecl-module
+upcp -sb php/install-extensions
 ```
 
 If you're using Multi-PHP you'd want to build the modules for your custom PHPs too.
