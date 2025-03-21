@@ -1,7 +1,7 @@
 # Addin play
 # Install memcached
 ---
-- name: "Update repos cache and install Yarn package."
+- name: "Update repos cache and install memcached package."
   yum:
     name: memcached
     state: present
